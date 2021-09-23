@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+    <style>
+
+    </style>
+<body>
+    <form action="" method="POST">
+        <label for="">아이디:</label>
+        <input type="text" id="s_id" name="u_id"/><br/>
+        <label for="">비밀번호:</label>
+        <input type="password" id="s_pw" name="u_pw"/><br/>
+        <input type="button" value="로그인" id="btn"/>
+    </form>
+
+    <!-- *************** -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" 
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" 
+    crossorigin="anonymous"></script>
+    <!-- *************** -->
+
+    <script>
+        $(function(){
+            //아이디가 btn인 요소가 클릭할 떄
+            $("#btn").bind("click",function(){
+               //사용자가 입력한 아이디 및 비밀번호를 가져온다.
+               var id = $("#s_id").val();
+               var pw = $("#s_pw").val();
+
+               if(id.trim().length <= 0){
+                alert("아이디를 입력하세요")
+                $("#s_id").val(""); // 청소
+                $("#s_id").focus();
+                return;
+               }
+               if(pw.trim().length <= 0){
+                alert("비밀번호를 입력하세요")
+                $("#s_pw").val(""); // 청소
+                $("#s_pw").focus();
+                return;
+               }
+               //현재문서에서 가장 첫번째 폼을 서버경로를 변경한다.
+               //document.forms[0].action = "Ex3_Login";
+               //document.forms[0].submit(); //서버로 보낸다.
+               var param ="u_id="+encodeURIComponent(id)+"&u_pw="+encodeURIComponent(pw);
+
+               $.ajax({
+                   url:"Ex3_Login", //서버요청 URL
+                   data: param, //전달하고하는 파라미터들
+                   type: "POST", //전송방식
+               }).done(function(data){
+                    //Ex3_Login을 제대로 호출했다면 실행할 곳!
+                    if(data ==0){
+                        alert("아이디 또는 비밀번호가 다릅니다.");
+                        $("#s_id").val("");
+                        $("#s_pw").val("");
+                        $("#s_id").focus();
+                    } else{
+                        location.href = "Ex3_Main";
+                    }
+               });
+
+              
+               
+            });
+
+        });
+    </script>
+</body>
+</html>

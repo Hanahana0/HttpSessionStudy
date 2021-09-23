@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+    <style>
+    	#table{
+    		border-collapse: collapse;
+    		width: 600px;
+			z-index: 4;
+			position: absolute;
+    	}
+    	#table th{
+    		border: 1px solid black;
+			padding: 4px;
+			background-color:#efefef;
+    	}
+		#table td{
+    		border: 1px solid black;
+			padding: 3px;
+    	}
+    	#dept_panel{
+    		position: relative;
+			z-index: 5;
+    		margin-left: 400px;
+    		width: 300px;
+    		height: 150px;
+    		background-color: #efefef;
+    		text-align: center;
+			padding-top: 35px;
+    		margin: 0 auto;
+    		border: 2.5px solid black;
+    		border-radius: 3px;
+    	}
+    	#search_btn{
+    		display: inline-block;
+			margin-top: 15px;
+			border: 1px solid red;    		
+    	}
+    	#cancel_btn{
+    		display: inline-block;
+			margin-top: 15px;
+			border: 1px solid red;    		
+    	}
+    	
+		
+    </style>
+</head>
+<body>
+	<div id = "wrap">
+		<header>
+			<h2>사원목록</h2>
+		</header>
+		<article>
+			<table id="table">
+				<caption>사원 List</caption>
+				<colgroup>
+					<col width="60px">
+					<col width="120px">
+					<col width="*">
+					<col width="80px">
+				</colgroup>
+				<thead>
+					<tr>
+						<td colspan="4">
+							<button type="button" id="all_btn">전체</button>
+							<button type="button" id="deptsearch_btn">부서검색</button>
+						</td>
+					</tr>
+					<tr>
+						<th>사번</th>
+						<th>이름</th>
+						<th>직종</th>
+						<th>부서코드</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</article>
+	</div>
+					<div id="dept_panel">
+						<div>
+							<label> 부서코드 :</label>
+							<input type="text" id="dept_id" name="dept">
+						</div>
+						<div>
+							<button type="button" id="search_btn">검색</button>
+							<button type="button" id="cancel_btn">취소</button>
+						</div>
+					</div>
+	
+	 <!-- *************** -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" 
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" 
+    crossorigin="anonymous"></script>
+    <!-- *************** -->
+    <script type="text/javascript">
+    	$(function(){
+    		
+    		
+    		//전체 버튼에게 click이벤트 적용
+    		$("#all_btn").bind("click",function(){
+    			
+    			
+    			$.ajax({
+    				url:"Ex4_EmpAll",
+    				type:"POST",
+    			}).done(function(data){
+    				//현재 문서에 아이디가 table인 요소에 tbody에 받은
+    				//자원들은 표현
+    				$("#table tbody").html(data);
+    				
+    			});
+    		});
+    		
+    		//부서코드로 사원검색
+    		
+    		$("#deptsearch_btn").bind("click", function(){
+				if($("#dept_panel").css("display") == "none"){
+					$("#dept_panel").css("display", "block");
+				}else{
+					$("#dept_panel").css("display", "none");
+				}
+			});
+    		
+    		//검색버튼을 눌렀을떄
+    			$("#search_btn").bind("click", function(){
+    				var dept_id = $("#dept_id").val();
+    				var dept = "dept="+encodeURIComponent(dept_id)
+					
+    				$.ajax({
+        				url:"Ex4_SearchDept",
+        				type:"post",
+						data: dept
+        			}).done(function(data){
+						$("#table tbody").html(data);
+						$("#dept_id").val("")
+        			})
+    			});
+    		//취소버튼을 눌렀을 때
+    			$("#cancel_btn").bind("click",function(){
+    				$("#dept_panel").css("display","none");
+    			})
+    		
+    		/* $.ajax({
+    			url:"ex4_emp",
+    			type: "POST"
+    		}).done(function(data){
+    			if(data == 0){
+    				alert("없는 부서번호입니다.")
+    				$("#dept_code").val("");
+    			}
+    		}) */
+    	});
+    </script>
+</body>
+</html>
